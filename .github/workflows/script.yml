@@ -13,6 +13,7 @@ jobs:
       # Generating Configuration Files
         name: Generating Configuration Files
         run: |
+          mkdir ~/.qsort
           echo "[Path]">~/.qsort/qsort.ini
           echo "General=$HOME/Others">>~/.qsort/qsort.ini
           echo "Videos=$HOME/Videos">>~/.qsort/qsort.ini
