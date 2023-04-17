@@ -49,7 +49,7 @@ jobs:
         run: |
           if [[ -f "$HOME/Documents/document.doc" ]]; then
               echo "Document Verification Complete"
-          else          persist-credentials: false
+          else
               echo "Document Verification Failed"
               exit 1
           fi
