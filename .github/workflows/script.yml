@@ -27,13 +27,13 @@ jobs:
           mkdir Documents Pictures Videos General
 
       # Building from Source Code
-        name: Building from Source Files
+      - name: Building from Source Files
         run: |
           cd ~/work/quick-file-sorter/quick-file-sorter
           make
       
       # Executing Binary
-        name: Executing Binary
+      - name: Executing Binary
         run: |
           cd ~/work/quick-file-sorter/quick-file-sorter
           mv qsort /usr/local/bin/
@@ -41,7 +41,7 @@ jobs:
           qsort
       
       # Checking If Everything Working Perfectly
-        name: Verifying Files
+      - name: Verifying Files
         run: |
           if [[ -f "$HOME/Documents/document.doc" ]]; then
               echo "Document Verification Complete"
