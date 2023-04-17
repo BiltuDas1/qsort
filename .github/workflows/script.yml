@@ -4,10 +4,14 @@ run-name: Verifying Pushed Codes of ${{ github.actor }}
 on: [push, pull_request]
 jobs:
   
-  vm-test:
+  vm-testing:
     runs-on: ubuntu-latest
     
     steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
       - shell: bash
       
       # Generating Configuration Files
@@ -30,7 +34,6 @@ jobs:
       # Building from Source Code
       - name: Building from Source Files
         run: |
-          cd ~/work/quick-file-sorter/quick-file-sorter
           make
       
       # Executing Binary
@@ -46,7 +49,7 @@ jobs:
         run: |
           if [[ -f "$HOME/Documents/document.doc" ]]; then
               echo "Document Verification Complete"
-          else
+          else          persist-credentials: false
               echo "Document Verification Failed"
               exit 1
           fi
