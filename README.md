@@ -1,1 +1,2 @@
-# quick-file-sorter
+# Quick File Sorter
+A quicker way to sort files in one click
