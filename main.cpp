@@ -1,20 +1,24 @@
 #include"lib/user.hpp"
 
 // Initialization
-class init{
-    public:
-        init(int arg, char** argv){
-            printf("%s\n", argv[0]);
-        }
+class init
+{
+    protected:
+        
 };
 
 // Main Program
-class base{
-    
+class base : protected init
+{
+    public:
+        base(int arg, char **argv){
+            
+        }
+        
 };
 
 int main(int arg, char **argv){
-    // Passing parameters to the program
-    init *ini = new init(arg, argv);
+    // Passing parameters to the base class
+    base *b = new base(arg, argv);
     return 0;
 }
