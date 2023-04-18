@@ -2,6 +2,7 @@
 #include<iostream>
 #include<filesystem>
 #include<string>
+#include"inicpp.h" // https://github.com/Rookfighter/inifile-cpp
 
 namespace fs = std::filesystem;
 using namespace std;
