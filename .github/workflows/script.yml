@@ -1,0 +1,78 @@
+name: AutoCheck
+run-name: Verifying Pushed Codes of ${{ github.actor }} 
+
+on: [push, pull_request]
+jobs:
+  
+  vm-testing:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - shell: bash
+      
+      # Generating Configuration Files
+        name: Generating Configuration Files
+        run: |
+          mkdir ~/.qsort
+          echo "[Path]">~/.qsort/qsort.ini
+          echo "General=$HOME/Others">>~/.qsort/qsort.ini
+          echo "Videos=$HOME/Videos">>~/.qsort/qsort.ini
+          echo "Pictures=$HOME/Pictures">>~/.qsort/qsort.ini
+          echo "Documents=$HOME/Documents">>~/.qsort/qsort.ini
+          echo >>~/.qsort/qsort.ini
+          echo "[Exclude]">>~/.qsort/qsort.ini
+          echo "Extensions=py txt">>~/.qsort/qsort.ini
+          echo "Filenames=requirements.txt">>~/.qsort/qsort.ini
+
+          cd ~
+          mkdir Documents Pictures Videos General
+
+      # Building from Source Code
+      - name: Building from Source Files
+        run: |
+          make
+      
+      # Executing Binary
+      - name: Executing Binary
+        run: |
+          cd ~/work/quick-file-sorter/quick-file-sorter
+          mv qsort /usr/local/bin/
+          cd .github/samples
+          qsort
+      
+      # Checking If Everything Working Perfectly
+      - name: Verifying Files
+        run: |
+          if [[ -f "$HOME/Documents/document.doc" ]]; then
+              echo "Document Verification Complete"
+          else
+              echo "Document Verification Failed"
+              exit 1
+          fi
+
+          if [[ -f "$HOME/Pictures/blackhole.jpg" ]]; then
+              echo "Picture Verification Complete"
+          else
+              echo "Picture Verification Failed"
+              exit 1
+          fi
+
+          if [[ -f "$HOME/Videos/horse.mp4" ]]; then
+              echo "Video Verification Complete"
+          else
+              echo "Video Verification Failed"
+              exit 1
+          fi
+
+          if [[ ! -f "$HOME/Others/add.py" ]]; then
+              echo "General Files Verification Complete"
+          else
+              echo "General Files Verification Failed"
+              exit 1
+          fi
+
+
