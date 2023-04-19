@@ -18,3 +18,18 @@ string *tempstr = new string;
 // int *tempint = new int;
 // double *tempdouble = new double;
 // char *tempchar = new char;
+
+namespace exclude
+{
+    string *extensions = new string;
+    string *filenames = new string;
+}
+
+namespace path
+{
+    string *general = new string;
+    string *documents = new string;
+    string *pictures = new string;
+    string *videos = new string;
+    string *music = new string;
+}
