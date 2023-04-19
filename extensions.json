@@ -1,0 +1,17 @@
+{
+    "Documents":[
+        "doc","docx","xls","xlsx","txt"
+    ],
+
+    "Pictures":[
+        "jpg","jpeg","png","ico"
+    ],
+
+    "Musics":[
+        "mp3","aac","wav"
+    ],
+
+    "Videos":[
+        "mp4","avi"
+    ]
+}
