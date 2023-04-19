@@ -1,8 +1,9 @@
 # Objectives
 ## Init Class
- - [ ] Detecting Current Directory
  - [ ] Reading $PATH (Optional)
+ - [ ] Reading $HOME
  - [ ] Parsing User Settings from file ($HOME/.qsort/qsort.conf)
+ - [ ] Parsing data sheet of extensions($HOME/.qsort/datasheet.json)
 
 ## Base Class
  - [x] Printing Versions & Help Manual

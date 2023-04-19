@@ -4,7 +4,10 @@
 class init
 {
     protected:
-        
+        inline string read_path_variable() {
+            return getenv("PATH");
+        }
+
 };
 
 // Main Program
@@ -48,14 +51,40 @@ class base : protected init
                 // Listing all folder/files
                 for(auto const& files : fs::directory_iterator{fs::current_path()}) 
                 {
-                    if(fs::is_regular_file(files))
-                        cout << files << '\n';
+                    if(fs::is_regular_file(files)){
+                        fs::path pathfile{files};
+                        *tempstr = pathfile.u8string();
+                        string *extension = new string;
+
+                        // Storing File Names into tempstr
+                        tempstr->erase(0, tempstr->find_last_of("/") + 1);
+                        if(tempstr->find_last_of(".") != string::npos){
+                            *extension = tempstr->substr(tempstr->find_last_of(".") + 1);
+
+                            // Check If extension exist into configuration
+                            if(exclude::extensions->find(*extension) != string::npos){
+                                continue;
+                            }
+
+
+
+                            delete extension;
+                        } else {
+                            // If no extension and not found into Exclude list then move to General
+                            if(exclude::filenames->find(*tempstr) == string::npos){
+                                fs::path temp_path = *path::general + "/" + *tempstr;
+                                fs::rename(pathfile, temp_path);
+                            }
+                        }
+                    }
                 }
             }
         }
         
         ~base(){
             delete ver, vertype, tempstr;
+            delete exclude::extensions, exclude::filenames;
+            delete path::documents, path::general, path::music, path::pictures, path::videos;
         }
 };
 
