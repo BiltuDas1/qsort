@@ -10,20 +10,18 @@ class init
     protected:
         // Dependencies
         void init_required(){
+            
+            private: void getconfig(path,exclude){
+                
+            }
+            
+            private: void getjson(json){
+            
+            }
+            
 
         }
 }; 
-float pi_value;
-
-int main()
-{
-    std::ifstream fin("extensions.json");
-    json j_extensions = json::parse(fin);
-
-    // assign values to global variables from JSON data
-    pi_value = j_extensions["pi"];
-    ...
-}
 
 
 
