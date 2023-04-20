@@ -16,12 +16,12 @@ jobs:
       
 
       # Building from Source Code
-      - name: Building from Source Files
+        name: Building from Source Files
         run: |
           make
       
       # Generating Configuration Files
-        name: Generating Configuration Files
+      - name: Generating Configuration Files
         run: |
           make install
 
