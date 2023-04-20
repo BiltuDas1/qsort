@@ -11,20 +11,18 @@ using namespace std;
 
 string *ver = new string("0.1");
 string *vertype = new string("beta");
+string *tempstr = new string;
 
 int errorcode = 0;
 
-string *tempstr = new string;
-// int *tempint = new int;
-// double *tempdouble = new double;
-// char *tempchar = new char;
-
+// [exclude] in qsort.conf
 namespace exclude
 {
     string *extensions = new string;
     string *filenames = new string;
 }
 
+// [path] in qsort.conf
 namespace path
 {
     string *general = new string;
@@ -32,4 +30,13 @@ namespace path
     string *pictures = new string;
     string *videos = new string;
     string *music = new string;
+}
+
+// extensions.json data
+namespace json
+{
+    string *documents = new string;
+    string *pictures = new string;
+    string *musics = new string;
+    string *videos = new string;
 }

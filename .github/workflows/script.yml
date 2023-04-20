@@ -14,33 +14,23 @@ jobs:
 
       - shell: bash
       
-      # Generating Configuration Files
-        name: Generating Configuration Files
-        run: |
-          mkdir ~/.qsort
-          echo "[Path]">~/.qsort/qsort.ini
-          echo "General=$HOME/Others">>~/.qsort/qsort.ini
-          echo "Videos=$HOME/Videos">>~/.qsort/qsort.ini
-          echo "Pictures=$HOME/Pictures">>~/.qsort/qsort.ini
-          echo "Documents=$HOME/Documents">>~/.qsort/qsort.ini
-          echo >>~/.qsort/qsort.ini
-          echo "[Exclude]">>~/.qsort/qsort.ini
-          echo "Extensions=py txt">>~/.qsort/qsort.ini
-          echo "Filenames=requirements.txt">>~/.qsort/qsort.ini
-
-          cd ~
-          mkdir Documents Pictures Videos General
 
       # Building from Source Code
       - name: Building from Source Files
         run: |
           make
       
+      # Generating Configuration Files
+        name: Generating Configuration Files
+        run: |
+          make install
+
+          cd ~
+          mkdir Documents Pictures Videos Music
+
       # Executing Binary
       - name: Executing Binary
         run: |
-          cd ~/work/quick-file-sorter/quick-file-sorter
-          mv qsort /usr/local/bin/
           cd .github/samples
           qsort
       
@@ -68,7 +58,7 @@ jobs:
               exit 1
           fi
 
-          if [[ ! -f "$HOME/Others/add.py" ]]; then
+          if [[ ! -f "$HOME/add.py" ]]; then
               echo "General Files Verification Complete"
           else
               echo "General Files Verification Failed"
