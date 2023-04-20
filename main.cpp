@@ -9,19 +9,16 @@ class init
 
     protected:
         // Dependencies
-        void init_required(){
-            
-            private: void getconfig(path,exclude){
-                
-            }
-            
-            private: void getjson(json){
-            
-            }
-            
+        
+void init_required(){
+    }
 
-        }
-}; 
+    void getconfig(string path, string exclude){
+    }
+
+    void getjson(string json){
+    }
+};
 
 
 
