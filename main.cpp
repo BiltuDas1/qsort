@@ -16,13 +16,33 @@ class init
     void getconfig()
     {
         ini::IniFile conf;
-        conf.load(home_path() + "/.qsort/qsort.conf");
+        conf.load("/etc/qsort/qsort.conf");
 
         *path::general = conf["Path"]["General"].as<string>();
         *path::documents = conf["Path"]["Documents"].as<string>();
         *path::pictures = conf["Path"]["Pictures"].as<string>();
         *path::videos = conf["Path"]["Videos"].as<string>();
         *path::music = conf["Path"]["Music"].as<string>();
+        
+        if(path::general->find("$HOME") != string::npos){
+            path::general->replace(path::general->find("$HOME"), 5, home_path());
+        }
+
+        if(path::documents->find("$HOME") != string::npos){
+            path::documents->replace(path::documents->find("$HOME"), 5, home_path());
+        }
+
+        if(path::pictures->find("$HOME") != string::npos){
+            path::pictures->replace(path::pictures->find("$HOME"), 5, home_path());
+        }
+
+        if(path::videos->find("$HOME") != string::npos){
+            path::videos->replace(path::videos->find("$HOME"), 5, home_path());
+        }
+
+        if(path::music->find("$HOME") != string::npos){
+            path::music->replace(path::music->find("$HOME"), 5, home_path());
+        }
 
         *exclude::extensions = conf["Exclude"]["Extensions"].as<string>();
         *exclude::filenames = conf["Exclude"]["Filenames"].as<string>();
@@ -32,7 +52,7 @@ class init
     {
         using nljson = nlohmann::json;
 
-        ifstream json_file(home_path() + "/.qsort/extensions.json");
+        ifstream json_file("/etc/qsort/extensions.json");
         nljson jsondata = nljson::parse(json_file);
 
         // Access the values in the JSON file
