@@ -6,15 +6,15 @@ qsort: main.cpp lib/user.hpp
 
 install:
 	sudo mv -f qsort /usr/local/bin
-	if [[ ! -d "${HOME}/.qsort" ]]; then \
-		mkdir "${HOME}/.qsort"; \
+	if [[ ! -d "/etc/qsort" ]]; then \
+		mkdir "/etc/qsort"; \
 	else \
-		echo -e "\033[0;31m${HOME}/.qsort folder already exist, If you did any configurations, then everything will be reset to default. \nPress Enter to continue.\033[0m"; \
+		echo -e "\033[0;31m/etc/qsort folder already exist, If you did any configurations, then everything will be reset to default. \nPress Enter to continue.\033[0m"; \
 		read -s; \
 	fi 
-	cp -f "./conf/extensions.json" "${HOME}/.qsort"
-	cp -f "./conf/qsort.conf" "${HOME}/.qsort"
-	sed -i 's/biltudas1/'"${USER}"'/g' "${HOME}/.qsort/qsort.conf"
+	cp -f "./conf/extensions.json" "/etc/qsort"
+	cp -f "./conf/qsort.conf" "/etc/qsort"
+	sed -i 's/$HOME/'"${HOME}"'/g' "/etc/qsort/qsort.conf"
 
 deb: qsort-debian.deb
 
