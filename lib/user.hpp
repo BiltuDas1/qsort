@@ -9,7 +9,7 @@
 namespace fs = std::filesystem;
 using namespace std;
 
-string *ver = new string("0.1");
+string *ver = new string("0.2");
 string *vertype = new string("beta");
 string *tempstr = new string;
 
