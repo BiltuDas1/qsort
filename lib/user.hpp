@@ -2,7 +2,6 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
-#include <map>
 #include <unistd.h>
 #include <fstream>
 #include "inicpp.h" // https://github.com/Rookfighter/inifile-cpp

@@ -12,112 +12,62 @@ class init
     {
         return getenv("HOME");
     }
-    public:
-    void init_required(){
-          getjson();
-        getconfig();
 
-    }
     void getconfig()
     {
-        /// Code
+        ini::IniFile conf;
+        conf.load(home_path() + "/.qsort/qsort.conf");
 
-        // configaration file name
+        *path::general = conf["Path"]["General"].as<string>();
+        *path::documents = conf["Path"]["Documents"].as<string>();
+        *path::pictures = conf["Path"]["Pictures"].as<string>();
+        *path::videos = conf["Path"]["Videos"].as<string>();
+        *path::music = conf["Path"]["Music"].as<string>();
 
-        ifstream config_file(home_path() + "/.qsort/config.conf");
-        string section_name;
-        string line;
-        // while (getline(config_file, line))
-        // {
-        //     // Line processing code
-        // }
-
-        // string line;
-        while (getline(config_file, line))
-        {
-            // Removing white spaces from line
-            line.erase(remove_if(line.begin(), line.end(), ::isspace), line.end());
-
-            // Skip empty and comment lines
-            if (line.empty() || line[0] == '#')
-                continue;
-
-            // Get section name
-            if (line[0] == '[' && line[line.size() - 1] == ']')
-            {
-                section_name = line.substr(1, line.size() - 2);
-            }
-            else
-            {
-                // Parse the line into key and value
-                auto delimiter_pos = line.find('=');
-                auto key = line.substr(0, delimiter_pos);
-                auto value = line.substr(delimiter_pos + 1);
-
-                // Store the value into the appropriate variable based on section and key name
-                if (section_name == "Path")
-                {
-                    if (key == "General")
-                        *path::general = value;
-                    else if (key == "Videos")
-                        *path::videos = value;
-                    else if (key == "Pictures")
-                        *path::pictures = value;
-                    else if (key == "Documents")
-                        *path::documents = value;
-                    else if (key == "Music")
-                        *path::music = value;
-                }
-                else if (section_name == "Exclude")
-                {
-                    if (key == "Extensions")
-                        *exclude::extensions = value;
-                    else if (key == "Filenames")
-                        *exclude::filenames = value;
-                }
-            }
-        }
-
-        // string g = "/home/biltudas1"; // Function or Variable
-        // *path::general = g;
+        *exclude::extensions = conf["Exclude"]["Extensions"].as<string>();
+        *exclude::filenames = conf["Exclude"]["Filenames"].as<string>();
     }
 
     void getjson()
     {
-        using json = nlohmann::json;
+        using nljson = nlohmann::json;
 
         ifstream json_file(home_path() + "/.qsort/extensions.json");
-        json jsondata = json::parse(json_file);
+        nljson jsondata = nljson::parse(json_file);
 
-    // Access the values in the JSON file
-    auto documents = jsondata["Documents"];
-    for (auto& document : documents) {
-        std::cout << document << std::endl;
+        // Access the values in the JSON file
+        auto documents = jsondata["Documents"];
+        for (auto& document : documents) {
+            json::documents->append(" ");
+            json::documents->append(document);
+        }
+
+        auto pictures = jsondata["Pictures"];
+        for (auto& picture : pictures) {
+            json::pictures->append(" ");
+            json::pictures->append(picture);
+        }
+
+        auto musics = jsondata["Musics"];
+        for (auto& music : musics) {
+            json::musics->append(" ");
+            json::musics->append(music);
+        }
+
+        auto videos = jsondata["Videos"];
+        for (auto& video : videos) {
+            json::videos->append(" ");
+            json::videos->append(video);
+        }
+    }
+    protected:
+
+    void init_required(){
+        getconfig();
+        getjson();
     }
 
-    auto pictures = jsondata["Pictures"];
-    for (auto& picture : pictures) {
-        std::cout << picture << std::endl;
-    }
-
-    auto musics = jsondata["Musics"];
-    for (auto& music : musics) {
-        std::cout << music << std::endl;
-    }
-
-    auto videos = jsondata["Videos"];
-    for (auto& video : videos) {
-        std::cout << video << std::endl;
-    }
-}
-
-
-
-    };
-
-
-    // Dependencies
-
+};
 
 
 // Main Program
@@ -244,7 +194,5 @@ int main(int arg, char **argv)
     // Passing parameters to the base class
     base *b = new base(arg, argv);
     delete b;
-    // init abc;
-    // abc.init_required();
     return errorcode;
 }
