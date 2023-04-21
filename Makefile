@@ -14,7 +14,7 @@ install:
 	fi 
 	cp -f "./extensions.json" "${HOME}/.qsort"
 	cp -f "./examples/qsort.conf" "${HOME}/.qsort"
-	sed -i 's/"biltudas1"/"${USER}"/g' "${HOME}/.qsort/qsort.conf"
+	sed -i 's/biltudas1/'"${USER}"'/g' "${HOME}/.qsort/qsort.conf"
 
 clean:
 	rm qsort
