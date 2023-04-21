@@ -145,6 +145,10 @@ public:
                         // Check If extension exist into configuration
                         if (exclude::extensions->find(*extension) != string::npos)
                             continue;
+                        
+                        // If filename exist into configuration
+                        if (exclude::filenames->find(*tempstr) != string::npos)
+                            continue;
 
                         // Check if extension exist into Catagories
                         string *mvpath = new string;
