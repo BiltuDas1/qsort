@@ -23,6 +23,9 @@ class init
         *path::pictures = conf["Path"]["Pictures"].as<string>();
         *path::videos = conf["Path"]["Videos"].as<string>();
         *path::music = conf["Path"]["Music"].as<string>();
+
+        *exclude::extensions = conf["Exclude"]["Extensions"].as<string>();
+        *exclude::filenames = conf["Exclude"]["Filenames"].as<string>();
     }
 
     void getjson()
@@ -41,20 +44,20 @@ class init
 
         auto pictures = jsondata["Pictures"];
         for (auto& picture : pictures) {
-            json::documents->append(" ");
-            json::documents->append(picture);
+            json::pictures->append(" ");
+            json::pictures->append(picture);
         }
 
         auto musics = jsondata["Musics"];
         for (auto& music : musics) {
-            json::documents->append(" ");
-            json::documents->append(music);
+            json::musics->append(" ");
+            json::musics->append(music);
         }
 
         auto videos = jsondata["Videos"];
         for (auto& video : videos) {
-            json::documents->append(" ");
-            json::documents->append(video);
+            json::videos->append(" ");
+            json::videos->append(video);
         }
     }
     protected:
