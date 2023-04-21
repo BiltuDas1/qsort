@@ -23,7 +23,7 @@ jobs:
       # Generating Configuration Files
       - name: Generating Configuration Files
         run: |
-          make install
+          sudo make install
 
           cd ~
           mkdir Documents Pictures Videos Music

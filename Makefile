@@ -5,7 +5,7 @@ qsort: main.cpp lib/user.hpp
 	g++ -std=c++17 main.cpp -o qsort
 
 install:
-	sudo mv -f qsort /usr/local/bin
+	mv -f qsort /usr/local/bin
 	if [[ ! -d "/etc/qsort" ]]; then \
 		mkdir "/etc/qsort"; \
 	else \
