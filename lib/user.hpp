@@ -1,11 +1,12 @@
-#include<stdio.h>
-#include<iostream>
-#include<filesystem>
-#include<string>
-#include<unistd.h>
-#include<fstream>
-#include"inicpp.h" // https://github.com/Rookfighter/inifile-cpp
-
+#include <stdio.h>
+#include <iostream>
+#include <filesystem>
+#include <string>
+#include <map>
+#include <unistd.h>
+#include <fstream>
+#include "inicpp.h" // https://github.com/Rookfighter/inifile-cpp
+#include "json.hpp" // https://github.com/nlohmann/json
 namespace fs = std::filesystem;
 using namespace std;
 
