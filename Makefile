@@ -14,7 +14,6 @@ install:
 	fi 
 	cp -f "./conf/extensions.json" "/etc/qsort"
 	cp -f "./conf/qsort.conf" "/etc/qsort"
-	sed -i 's/$HOME/'"${HOME}"'/g' "/etc/qsort/qsort.conf"
 
 deb: qsort-debian.deb
 
