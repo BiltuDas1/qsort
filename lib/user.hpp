@@ -4,15 +4,19 @@
 #include <string>
 #include <unistd.h>
 #include <thread>
+#include <ranges>
+#include <span>
 #include <fstream>
 #include "inicpp.h" // https://github.com/Rookfighter/inifile-cpp
 #include "json.hpp" // https://github.com/nlohmann/json
 namespace fs = std::filesystem;
 using namespace std;
 
-string *ver = new string("0.2");
-string *vertype = new string("beta");
+const string ver = "0.3";
+const string vertype = "beta";
 string *tempstr = new string;
+string *current_path = new string(fs::current_path());
+unsigned long long int tempint;
 
 int errorcode = 0;
 
