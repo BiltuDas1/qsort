@@ -1,19 +1,12 @@
 #include "lib/user.hpp"
 
+#define home_path getenv("HOME")
+
 // Initialization
 class init
 {
-    inline string read_path_variable()
-    {
-        return getenv("PATH");
-    }
-
-    inline string home_path()
-    {
-        return getenv("HOME");
-    }
-
-    void getconfig()
+    protected:
+    static void getconfig()
     {
         ini::IniFile conf;
         conf.load("/etc/qsort/qsort.conf");
@@ -25,30 +18,30 @@ class init
         *path::music = conf["Path"]["Music"].as<string>();
         
         if(path::general->find("$HOME") != string::npos){
-            path::general->replace(path::general->find("$HOME"), 5, home_path());
+            path::general->replace(path::general->find("$HOME"), 5, home_path);
         }
 
         if(path::documents->find("$HOME") != string::npos){
-            path::documents->replace(path::documents->find("$HOME"), 5, home_path());
+            path::documents->replace(path::documents->find("$HOME"), 5, home_path);
         }
 
         if(path::pictures->find("$HOME") != string::npos){
-            path::pictures->replace(path::pictures->find("$HOME"), 5, home_path());
+            path::pictures->replace(path::pictures->find("$HOME"), 5, home_path);
         }
 
         if(path::videos->find("$HOME") != string::npos){
-            path::videos->replace(path::videos->find("$HOME"), 5, home_path());
+            path::videos->replace(path::videos->find("$HOME"), 5, home_path);
         }
 
         if(path::music->find("$HOME") != string::npos){
-            path::music->replace(path::music->find("$HOME"), 5, home_path());
+            path::music->replace(path::music->find("$HOME"), 5, home_path);
         }
 
         *exclude::extensions = conf["Exclude"]["Extensions"].as<string>();
         *exclude::filenames = conf["Exclude"]["Filenames"].as<string>();
     }
 
-    void getjson()
+    static void getjson()
     {
         using nljson = nlohmann::json;
 
@@ -80,12 +73,6 @@ class init
             json::videos->append(video);
         }
     }
-    protected:
-
-    void init_required(){
-        getconfig();
-        getjson();
-    }
 
 };
 
@@ -110,7 +97,7 @@ class base : protected init
     }
 
 public:
-    base(int arg, char **argv)
+    base(const int arg, const char **argv)
     {
         // If arguments passed into the executable
         if (arg > 1)
@@ -145,7 +132,10 @@ public:
         else
         {
             // Initializing Variables/Settings
-            init::init_required();
+            thread g_config(getconfig);
+            thread g_json(getjson);
+            g_config.join();
+            g_json.join();
 
             // Listing all folder/files
             for (auto const &files : fs::directory_iterator{fs::current_path()})
@@ -213,7 +203,7 @@ public:
     }
 };
 
-int main(int arg, char **argv)
+int main(const int arg, const char **argv)
 {
     // Passing parameters to the base class
     base *b = new base(arg, argv);
