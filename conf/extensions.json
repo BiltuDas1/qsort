@@ -1,17 +1,24 @@
 {
     "Documents":[
-        "doc", "docx", "xls", "xlsx", "txt", "pdf"
+        "doc", "docx", "xls", "xlsx", "txt", "pdf","pptx","rtf","odt","ott","odm","docm","dotx","dotm","xls","xlsx","csv","tsv","xlsm","xltm","xltx","ods","ots","ppt","ppsx","odp","otp"
     ],
 
     "Pictures":[
-        "jpg", "jpeg", "png", "ico"
+        "jpg", "jpeg", "png", "ico","gif","bmp","tiff","svg","webp","ico","eps","raw","hdr"
     ],
 
     "Musics":[
-        "mp3", "aac", "wav", "webm"
+        "mp3", "aac", "wav", "webm","wma","flac","ogg","m4a","aiff","alac","dsd","ape","opus","midi","kar","m3u","pls","cue","sib","mus","gpx","ra","ram","ac3","dts","wv","tta","vox","snd","raw","amr","au","dct","gsm","ivs","m4r","mpc","ofr","w64"
     ],
 
     "Videos":[
-        "mp4", "avi"
+        "mp4", "avi","mkv","mov","wmv","flv","mpeg","mpg","3gp","3g2","vob","m4v","rm","rmvb","webm","mts","ts","divx","ogv","asf","f4v","h264","hevc","ogm","yuv"              
+
     ]
 }
+
+
+
+
+
+
