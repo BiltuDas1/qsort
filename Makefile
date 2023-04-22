@@ -2,7 +2,7 @@ SHELL := /bin/bash
 all: qsort
 
 qsort: main.cpp lib/user.hpp
-	g++ -std=c++17 main.cpp -o qsort
+	g++ -std=c++20 main.cpp -o qsort
 
 install:
 	mv -f qsort /usr/local/bin
@@ -18,7 +18,7 @@ install:
 deb: qsort-debian.deb
 
 qsort-debian.deb:
-	g++ -std=c++17 main.cpp -o qsort
+	g++ -std=c++20 main.cpp -o qsort
 	mkdir -p qsort-debian/usr/local/bin
 	cp -fr DEBIAN qsort-debian/
 	cp -f qsort qsort-debian/usr/local/bin/
