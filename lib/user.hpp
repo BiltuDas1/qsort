@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <string>
 #include <unistd.h>
+#include <thread>
 #include <fstream>
 #include "inicpp.h" // https://github.com/Rookfighter/inifile-cpp
 #include "json.hpp" // https://github.com/nlohmann/json
