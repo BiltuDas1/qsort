@@ -1,11 +1,11 @@
 #include "lib/user.hpp"
 
-const string home_path = getenv("HOME");
+#define home_path getenv("HOME")
 
 // Initialization
 class init
 {
-    public:
+    protected:
     static void getconfig()
     {
         ini::IniFile conf;
