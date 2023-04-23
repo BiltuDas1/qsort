@@ -89,12 +89,15 @@ class base : protected init
     void help(string exec)
     {
         cout << "Parameters of qsort are:\n\n";
-        cout << "--version       Prints the version information\n";
-        cout << "--help          Shows this window" << endl;
+        cout << "--version          Prints the version information\n";
+        cout << "--help             Shows this window\n";
+        cout << "--edit-conf[cli]   Opens qsort configuration file(requires sudo)\n";
+        cout << "  cli              Force to cli mode\n";
+        cout << endl;
     }
     void error(string err)
     {
-        cout << "Error: Unrecognized parameter " << err << endl;
+        cerr << "Error: Unrecognized parameter " << err << endl;
         errorcode = 1;
     }
 
@@ -186,10 +189,36 @@ public:
                 else
                     error(argv[2]);
             }
-            // If no arguments passed then do main operation
+            if (!tempstr->compare("--edit-conf"))
+            {
+                const char *editor;
+                if (arg == 2){
+                    if(access("/usr/bin/xdg-open", X_OK)){
+                        editor = "editor";
+                    } else {
+                        editor = "xdg-open";
+                    }
+                } else {
+                    *tempstr = argv[2];
+                    if (!tempstr->compare("cli")){
+                        editor = "editor";
+                    }
+                }
+                
+                char* const args[] = {const_cast<char*>(editor), const_cast<char*>("/etc/qsort/qsort.conf"), nullptr};
+
+                if (geteuid() != 0){
+                    cerr << "Error: Sudo permission required\n";
+                } else {
+                    execvp(editor, args); // Open default text editor
+                    cerr << "Error: Could not open text editor\n";
+                }
+                errorcode  = 1;
+            }
         }
         else
         {
+            // If no arguments passed then do main operation
             // Initializing Variables/Settings
             thread g_config(init::getconfig);
             thread g_json(init::getjson);

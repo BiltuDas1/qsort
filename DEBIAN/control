@@ -1,6 +1,6 @@
 Package: qsort
 Version: 0.3-beta
-Installed-Size: 660
+Installed-Size: 727
 Maintainer: BiltuDas1, berarahul
 Architecture: all
 Description: Quicker way to sort file according to user settings
