@@ -1,3 +1,4 @@
+[![AutoCheck](https://github.com/BiltuDas1/qsort/actions/workflows/script.yml/badge.svg)](https://github.com/BiltuDas1/qsort/actions/workflows/script.yml)
 # Quick File Sorter
 A quicker way to sort files using one command
 
