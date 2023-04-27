@@ -65,4 +65,43 @@ jobs:
               exit 1
           fi
 
+  debian-package:
+    runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      
+      - shell: bash
+
+      # Generating Files
+        name: Compiling Files
+        run: |
+          make
+
+      - name: Modifying Debian Installer Information
+        run: |
+          default=$(cat DEBIAN/control | grep "Installed-Size" | awk '{print $2}')
+          compiled=$(ls -l qsort | awk '{print $5}')
+          compiled=$((compiled/1024))
+          make clean
+          if [[ "$compiled" -ne "$default" ]]; then
+              sed -i 's/Installed-Size: '"$default"'/Installed-Size: '"$compiled"'/' DEBIAN/control
+          fi
+
+      # Updating Files
+      - name: Updating Files
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Updated debian control information" && echo File Updated || echo Already up-to-date
+
+      # Pushing Files
+      - name: Pushing Files
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

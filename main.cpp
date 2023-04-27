@@ -1,6 +1,8 @@
 #include "lib/user.hpp"
 
 #define home_path getenv("HOME")
+#define yes true
+#define no false
 
 // Initialization
 class init
@@ -89,12 +91,15 @@ class base : protected init
     void help(string exec)
     {
         cout << "Parameters of qsort are:\n\n";
-        cout << "--version       Prints the version information\n";
-        cout << "--help          Shows this window" << endl;
+        cout << "--version          Prints the version information\n";
+        cout << "--help             Shows this window\n";
+        cout << "--edit-conf[cli]   Opens qsort configuration file(requires sudo)\n";
+        cout << "  cli              Force to cli mode\n";
+        cout << endl;
     }
     void error(string err)
     {
-        cout << "Error: Unrecognized parameter " << err << endl;
+        cerr << "Error: Unrecognized parameter " << err << endl;
         errorcode = 1;
     }
 
@@ -186,10 +191,36 @@ public:
                 else
                     error(argv[2]);
             }
-            // If no arguments passed then do main operation
+            if (!tempstr->compare("--edit-conf"))
+            {
+                const char *editor;
+                if (arg == 2){
+                    if(access("/usr/bin/xdg-open", X_OK)){
+                        editor = "editor";
+                    } else {
+                        editor = "xdg-open";
+                    }
+                } else {
+                    *tempstr = argv[2];
+                    if (!tempstr->compare("cli")){
+                        editor = "editor";
+                    }
+                }
+                
+                char* const args[] = {const_cast<char*>(editor), const_cast<char*>("/etc/qsort/qsort.conf"), nullptr};
+
+                if (geteuid() != 0){
+                    cerr << "Error: Sudo permission required\n";
+                } else {
+                    execvp(editor, args); // Open default text editor
+                    cerr << "Error: Could not open text editor\n";
+                }
+                errorcode  = 1;
+            }
         }
         else
         {
+            // If no arguments passed then do main operation
             // Initializing Variables/Settings
             thread g_config(init::getconfig);
             thread g_json(init::getjson);
@@ -201,14 +232,16 @@ public:
             thread threads[thread_count];
             const long long int thread_process = file_count/thread_count;
 
+            bool taskDone = no;
+
             if (thread_process > thread_count){
                 tempint = 0;
 
+                cout << "Using " + to_string(thread_count) + " Threads\n";
                 // Creating threads
                 for(unsigned short i = 0; i < thread_count; ++i){
                     threads[i] = thread(&base::operations, thread_process, tempint);
-                    cout << "Thread " << i + 1 << " [Range: " << tempint << "-" << tempint + thread_process << "]" << endl;
-                    tempint = tempint + thread_process + 1;
+                    tempint = tempint + thread_process;
                     if(tempint > file_count){
                         tempint = file_count;
                     }
@@ -218,6 +251,8 @@ public:
                 for(auto &thread : threads){
                     thread.join();
                 }
+
+                taskDone = yes;
             }
 
             // Checks if any remaining files
@@ -225,6 +260,11 @@ public:
             const unsigned int remaining_count = distance(fs::directory_iterator(*current_path), fs::directory_iterator{});
             if (remaining_count){
                 operations(remaining_count, tempint);
+            }
+
+            // If operation completed
+            if(taskDone){
+                cout << "Operation Completed" << endl;
             }
         }
     }
