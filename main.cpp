@@ -80,7 +80,7 @@ class init
 // Main Program
 class base : protected init
 {
-    unsigned short thread_count = std::thread::hardware_concurrency();
+    unsigned int thread_count = std::thread::hardware_concurrency();
 
     void version()
     {
@@ -228,33 +228,30 @@ public:
             const long long unsigned int file_count = distance(fs::directory_iterator(*current_path), fs::directory_iterator{});
 
             thread threads[thread_count];
-            const long long int thread_process = file_count/thread_count;
+            long long unsigned int thread_process = file_count/thread_count;
+            unsigned int remaining_files = file_count % thread_count;
 
-            if (thread_process > thread_count){
-                tempint = 0;
-
-                // Creating threads
-                for(unsigned short i = 0; i < thread_count; ++i){
-                    threads[i] = thread(&base::operations, thread_process, tempint);
-                    cout << "Thread " << i + 1 << " [Range: " << tempint << "-" << tempint + thread_process << "]" << endl;
-                    tempint = tempint + thread_process + 1;
-                    if(tempint > file_count){
-                        tempint = file_count;
-                    }
-                }
-
-                // Waiting for thread to complete
-                for(auto &thread : threads){
-                    thread.join();
-                }
-            }
-
-            // Checks if any remaining files
             tempint = 0;
-            const unsigned int remaining_count = distance(fs::directory_iterator(*current_path), fs::directory_iterator{});
-            if (remaining_count){
-                operations(remaining_count, tempint);
+
+            cout << "Using " + to_string(thread_count) + " Threads\n";
+            // Creating threads
+            for(unsigned short i = 0; i < thread_count; ++i){
+                if(remaining_files != 0){
+                    thread_process += 1;
+                    --remaining_files;
+                }
+                threads[i] = thread(&base::operations, thread_process, tempint);
+                tempint = tempint + thread_process;
+                if(tempint > file_count){
+                    tempint = file_count;
+                }
             }
+
+            // Waiting for thread to complete
+            for(auto &thread : threads){
+                thread.join();
+            }
+            cout << "Operation Completed\n";
         }
     }
 
