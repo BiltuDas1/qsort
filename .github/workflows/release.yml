@@ -2,11 +2,9 @@ name: Release
 run-name: Releasing Packages from main branch
 
 on:
-  push:
-    branches: main
-
   workflow_run:
     workflows: [AutoCheck]
+    branches: [main]
     types: [completed]
 
 jobs:
