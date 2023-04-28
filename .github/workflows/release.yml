@@ -1,8 +1,8 @@
 name: Release
 run-name: Releasing Packages from main branch
 
-on: [push]
-  workflow-run:
+on:
+  workflow_run:
     workflows: [autoscript]
     types: [completed]
 
