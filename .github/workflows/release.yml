@@ -1,0 +1,39 @@
+name: Release
+run-name: Releasing Packages from main branch
+
+on:
+  workflow_run:
+    workflows: [autoscript]
+    types: [completed]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@master
+        with: 
+          fetch-depth: 0
+
+      - shell: bash
+        name: Building packages
+        run: |
+          make deb
+          mv qsort-debian.deb qsort_${{ vars.VER }}_1_amd64.deb
+
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "${{ vars.VER }}"
+          prerelease: ${{ vars.PRE_RELEASED }}
+          files: |
+            qsort_${{ vars.VER }}_1_amd64.deb
+  
+  skip-task:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - shell: bash
+        run: |
+          echo "Error: AutoCheck Failed, So no Packages are released."
+          exit
