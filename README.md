@@ -16,7 +16,8 @@ sudo make install
 ### Source Code Building
 |Task Name|`main`|`pre/beta`|
 |---------|------|----------|
-|AutoCheck|![AutoCheck](https://github.com/BiltuDas1/qsort/actions/workflows/script.yml/badge.svg?branch=main)|![AutoCheck](https://github.com/BiltuDas1/qsort/actions/workflows/script.yml/badge.svg?branch=pre/beta)|
+|AutoCheck|![AutoCheck](https://github.com/BiltuDas1/qsort/actions/workflows/autoscript.yml/badge.svg?branch=main)|![AutoCheck](https://github.com/BiltuDas1/qsort/actions/workflows/autoscript.yml/badge.svg?branch=pre/beta)|
+|Release|![Release](https://github.com/BiltuDas1/qsort/actions/workflows/release.yml/badge.svg?branch=main)| Not Applicable :x: |
 
 ### Parameters
 Use `qsort --help` to see what parameters it supports.
