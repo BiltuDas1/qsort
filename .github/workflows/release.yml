@@ -6,7 +6,7 @@ on:
     branches: main
 
   workflow_run:
-    workflows: [autoscript]
+    workflows: [AutoCheck]
     types: [completed]
 
 jobs:
