@@ -77,7 +77,7 @@ jobs:
       - shell: bash
 
       # Updating the Source Code Information
-      - name: Updating the Source Code
+        name: Updating the Source Code
         run: |
           # Updates the Source Code Version
           ver=$(echo ${{ vars.VER }} | cut -f1 -d-)
@@ -92,7 +92,7 @@ jobs:
           fi
 
       # Generating Files
-        name: Compiling Files
+      - name: Compiling Files
         run: |
           make
 
