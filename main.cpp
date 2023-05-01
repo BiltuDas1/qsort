@@ -86,17 +86,22 @@ class base : protected init
 
     void version()
     {
-        cout << "version " << ver << " " << vertype << endl;
+        cout << "qsort v" << ver << "-" << vertype << endl;
     }
+
     void help(string exec)
     {
-        cout << "Parameters of qsort are:\n\n";
-        cout << "--version          Prints the version information\n";
-        cout << "--help             Shows this window\n";
-        cout << "--edit-conf[cli]   Opens qsort configuration file(requires sudo)\n";
-        cout << "  cli              Force to cli mode\n";
+        cout << exec << " [--thread] [count]\n\n";
+        cout << "Parameters of qsort are:\n";
+        cout << "--version              Prints the version information\n";
+        cout << "--help                 Shows this window\n";
+        cout << "--edit-conf [cli]      Opens qsort configuration file(requires sudo)\n";
+        cout << "   cli                 Force to cli mode\n";
+        cout << "--thread [count]       Threads count which will be used\n";
+        cout << "                       The count range only can between [1-" << thread_count << "]";
         cout << endl;
     }
+
     void error(string err)
     {
         cerr << "Error: Unrecognized parameter " << err << endl;
@@ -167,59 +172,7 @@ class base : protected init
             }
     }
 
-
-public:
-    base(const int arg, const char **argv)
-    {
-        // If arguments passed into the executable
-        if (arg > 1)
-        {
-            // Version Information
-            *tempstr = argv[1];
-            if (!tempstr->compare("--version"))
-            {
-                if (arg == 2)
-                    version();
-                else
-                    error(argv[2]);
-            }
-            // Help
-            if (!tempstr->compare("--help"))
-            {
-                if (arg == 2)
-                    help(argv[0]);
-                else
-                    error(argv[2]);
-            }
-            if (!tempstr->compare("--edit-conf"))
-            {
-                const char *editor;
-                if (arg == 2){
-                    if(access("/usr/bin/xdg-open", X_OK)){
-                        editor = "editor";
-                    } else {
-                        editor = "xdg-open";
-                    }
-                } else {
-                    *tempstr = argv[2];
-                    if (!tempstr->compare("cli")){
-                        editor = "editor";
-                    }
-                }
-                
-                char* const args[] = {const_cast<char*>(editor), const_cast<char*>("/etc/qsort/qsort.conf"), nullptr};
-
-                if (geteuid() != 0){
-                    cerr << "Error: Sudo permission required\n";
-                } else {
-                    execvp(editor, args); // Open default text editor
-                    cerr << "Error: Could not open text editor\n";
-                }
-                errorcode  = 1;
-            }
-        }
-        else
-        {
+    void work_thread(){
             // If no arguments passed then do main operation
             // Initializing Variables/Settings
             thread g_config(init::getconfig);
@@ -237,7 +190,7 @@ public:
             if (thread_process > thread_count){
                 tempint = 0;
 
-                cout << "Using " + to_string(thread_count) + " Threads\n";
+                cout << "Using " << thread_count << " Threads\n";
                 // Creating threads
                 for(unsigned short i = 0; i < thread_count; ++i){
                     threads[i] = thread(&base::operations, thread_process, tempint);
@@ -266,7 +219,78 @@ public:
             if(taskDone){
                 cout << "Operation Completed" << endl;
             }
+    }
+
+
+public:
+    base(const int arg, const char **argv)
+    {
+        // If arguments passed into the executable
+        if (arg > 1)
+        {
+            // Version Information
+            *tempstr = argv[1];
+            if (!tempstr->compare("--version"))
+            {
+                if (arg == 2)
+                    version();
+                else
+                    error(argv[2]);
+            }
+            // Help
+            else if (!tempstr->compare("--help"))
+            {
+                if (arg == 2)
+                    help(argv[0]);
+                else
+                    error(argv[2]);
+            }
+            // Edit Configuration
+            else if (!tempstr->compare("--edit-conf"))
+            {
+                const char *editor;
+                if (arg == 2){
+                    if(access("/usr/bin/xdg-open", X_OK)){
+                        editor = "editor";
+                    } else {
+                        editor = "xdg-open";
+                    }
+                } else {
+                    *tempstr = argv[2];
+                    if (!tempstr->compare("cli")){
+                        editor = "editor";
+                    }
+                }
+                
+                char* const args[] = {const_cast<char*>(editor), const_cast<char*>("/etc/qsort/qsort.conf"), nullptr};
+
+                if (geteuid() != 0){
+                    cerr << "Error: Sudo permission required\n";
+                } else {
+                    execvp(editor, args); // Open default text editor
+                    cerr << "Error: Could not open text editor\n";
+                }
+                errorcode  = 1;
+            }
+            // Thread parameter
+            else if (!tempstr->compare("--thread"))
+            {
+                if (arg == 2)
+                {
+                    work_thread();
+                } else {
+                    *tempstr = argv[2];
+                    if (stoi(*tempstr) <= thread_count && stoi(*tempstr) >= 1){
+                        this->thread_count = stoi(*tempstr);
+                        work_thread();
+                    } else {
+                        cout << "Error: Out of range. You can only use any thread between [1-" << thread_count << "]." << "\n";
+                    }
+                }
+            }
         }
+        else
+            work_thread();
     }
 
     ~base()

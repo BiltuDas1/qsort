@@ -1,3 +1,4 @@
+// <----- Header files ----->
 #include <stdio.h>
 #include <iostream>
 #include <filesystem>
@@ -12,8 +13,13 @@
 namespace fs = std::filesystem;
 using namespace std;
 
+// <--- Version Information Start --->
+// <--- Don't modify the text here --->
 const string ver = "0.3";
 const string vertype = "beta";
+// <--- Version Information End --->
+
+// <-------- Main user.hpp starts here -------->
 string *tempstr = new string;
 string *current_path = new string(fs::current_path());
 unsigned long long int tempint;

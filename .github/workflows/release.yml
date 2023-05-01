@@ -20,7 +20,7 @@ jobs:
         name: Building packages
         run: |
           make deb
-          mv qsort-debian.deb qsort_${{ vars.VER }}_1_amd64.deb
+          mv qsort-debian.deb qsort_v${{ vars.VER }}_1_amd64.deb
 
       - uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -28,7 +28,7 @@ jobs:
           automatic_release_tag: "${{ vars.VER }}"
           prerelease: ${{ vars.PRE_RELEASED }}
           files: |
-            qsort_${{ vars.VER }}_1_amd64.deb
+            qsort_v${{ vars.VER }}_1_amd64.deb
   
   skip-task:
     runs-on: ubuntu-latest

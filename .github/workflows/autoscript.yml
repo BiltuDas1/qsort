@@ -76,13 +76,36 @@ jobs:
       
       - shell: bash
 
+      # Updating the Source Code Information
+      - name: Updating the Source Code
+        run: |
+          # Updates the Source Code Version
+          ver=$(echo ${{ vars.VER }} | cut -f1 -d-)
+          vertype=$(echo ${{ vars.VER }} | cut -f2 -d-)
+          userver=$(grep -n "const string ver = \"" lib/user.hpp | head -1 | awk '{print $5}' | cut -f2 -d\")
+          uservertype=$(grep -n "const string vertype = \"" lib/user.hpp | head -1 | awk '{print $5}' | cut -f2 -d\")
+          if [[ "$ver" != "$userver" ]]; then
+              sed -i 's/const string ver = "'"$userver"'";/const string ver = "'"$ver"'";/' lib/user.hpp
+          fi
+          if [[ "$vertype" != "$uservertype" ]]; then
+              sed -i 's/const string vertype = "'"$uservertype"'";/const string vertype = "'"$vertype"'";/' lib/user.hpp
+          fi
+
       # Generating Files
         name: Compiling Files
         run: |
           make
 
+      # Modifying Debian Installer Information
       - name: Modifying Debian Installer Information
         run: |
+          # Updates the version into control
+          default=$(cat DEBIAN/control | grep "Version" | awk '{print $2}')
+          if [[ "$default" != "${{ vars.VER }}" ]]; then
+              sed -i 's/Version: '"$default"'/Version: '"${{ vars.VER }}"'/' DEBIAN/control
+          fi
+
+          # Updates total installed size
           default=$(cat DEBIAN/control | grep "Installed-Size" | awk '{print $2}')
           compiled=$(ls -l qsort | awk '{print $5}')
           compiled=$((compiled/1024))
@@ -91,7 +114,7 @@ jobs:
               sed -i 's/Installed-Size: '"$default"'/Installed-Size: '"$compiled"'/' DEBIAN/control
           fi
 
-      # Updating Files
+      # Signing Files
       - name: Updating Files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
