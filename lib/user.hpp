@@ -1,4 +1,5 @@
 // <----- Header files ----->
+
 #include <stdio.h>
 #include <iostream>
 #include <filesystem>
@@ -15,15 +16,23 @@ using namespace std;
 
 // <--- Version Information Start --->
 // <--- Don't modify the text here --->
+
 const string ver = "0.3.1";
 const string vertype = "beta";
+
 // <--- Version Information End --->
 
 // <-------- Main user.hpp starts here -------->
+// A dynamic String for storing temporary data
 string *tempstr = new string;
+
+// A dynamic String which contains the current path location
 string *current_path = new string(fs::current_path());
+
+// An integer for storing temporary long integers
 unsigned long long int tempint;
 
+// An integer variable which contains the program exit code
 int errorcode = 0;
 
 // [exclude] in qsort.conf

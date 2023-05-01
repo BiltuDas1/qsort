@@ -19,7 +19,10 @@ jobs:
       - shell: bash
         name: Building packages
         run: |
+          cmake -B build .
+          cd build/
           make deb
+          cd ..
           mv qsort-debian.deb qsort_v${{ vars.VER }}_1_amd64.deb
 
       - uses: marvinpinto/action-automatic-releases@latest

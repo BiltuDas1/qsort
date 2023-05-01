@@ -18,13 +18,13 @@ jobs:
       # Building from Source Code
         name: Building from Source Files
         run: |
-          make
+          cmake -B build .
+          cd build/
+          sudo make install
       
       # Generating Configuration Files
       - name: Generating Configuration Files
         run: |
-          sudo make install
-
           cd ~
           mkdir Documents Pictures Videos Music
 

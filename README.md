@@ -17,10 +17,11 @@ You can build the source code yourself by cloning the repository and running the
 ```
 git clone https://github.com/BiltuDas1/qsort.git
 cd qsort/
-make
+cmake -B build .
+cd build/
 sudo make install
 ```
-
+Note: It requires CMake 3.22 or higher  
 Alternatively, you can download pre-built binaries from the releases page.
 
 ### Source Code Building
