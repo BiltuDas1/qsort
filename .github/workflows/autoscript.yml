@@ -94,6 +94,10 @@ jobs:
       # Generating Files
       - name: Compiling Files
         run: |
+          echo .gitignore>.gitignore
+          echo build/>>.gitignore
+          cmake -B build .
+          cd build/
           make
 
       # Modifying Debian Installer Information
@@ -102,18 +106,18 @@ jobs:
           # Updates the version into control
           default=$(cat DEBIAN/control | grep "Version" | awk '{print $2}')
           if [[ "$default" != "${{ vars.VER }}" ]]; then
-              sed -i 's/Version: '"$default"'/Version: '"${{ vars.VER }}"'/' DEBIAN/control
+              sed -i 's/Version: '"$default"'/Version: '"${{ vars.VER }}"'/' ../DEBIAN/control
           fi
 
           # Updates total installed size
-          default=$(cat DEBIAN/control | grep "Installed-Size" | awk '{print $2}')
+          default=$(cat ../DEBIAN/control | grep "Installed-Size" | awk '{print $2}')
           compiled=$(ls -l qsort | awk '{print $5}')
           compiled=$((compiled/1024))
           make clean
           if [[ "$compiled" -ne "$default" ]]; then
-              sed -i 's/Installed-Size: '"$default"'/Installed-Size: '"$compiled"'/' DEBIAN/control
+              sed -i 's/Installed-Size: '"$default"'/Installed-Size: '"$compiled"'/' ../DEBIAN/control
           fi
-
+          
       # Signing Files
       - name: Updating Files
         run: |
