@@ -60,3 +60,20 @@ namespace json
     string *musics = new string;
     string *videos = new string;
 }
+
+// Function to execute Commands into Host System
+string execute_cmd(const string& cmd)
+{
+    string result;
+    FILE* output = popen(cmd.c_str(), "r");
+    if (!output)
+        throw std::runtime_error("Error: Can't read qsort.conf, Syntax Error");
+    
+    char buffer[1024];
+    while (fgets(buffer, sizeof(buffer), output) != nullptr)
+        result += buffer;
+    
+    pclose(output);
+    result.erase(result.find_last_not_of("\n") + 1);
+    return result;
+}

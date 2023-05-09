@@ -1,12 +1,38 @@
 #include "lib/user.hpp"
 
-#define home_path getenv("HOME")
 #define yes true
 #define no false
 
 // Initialization
 class init
 {
+    static void xdg_user_dir(string& value, const string optional){
+        value = execute_cmd("xdg-user-dir " + optional);
+    }
+    static void xdg_user_dir(string& value){
+        int firstpath, secondpath;
+        string str;
+        while(value.find("$") != string::npos){
+            firstpath = value.find_first_of("$");
+            str = value.substr(firstpath + 1);
+            // If the val doesn't contains any slash
+            if(str.find_first_of("/") != string::npos){
+                secondpath = str.find_first_of("/") + 1;
+            } else {
+                secondpath = str.length() + 1;
+            }
+            str.erase(secondpath - 1);
+            str = execute_cmd("xdg-user-dir " + str);
+            if(!value.find_first_of("/")){
+                if(str.substr(0, 1) == "/" && value.substr(firstpath - 1, 1) == "/"){
+                    value.replace(firstpath - 1, secondpath + 1, str);
+                    return;
+                }
+            }
+            value.replace(firstpath, secondpath, str);
+        }
+    }
+
     public:
     static void getconfig()
     {
@@ -19,25 +45,27 @@ class init
         *path::videos = conf["Path"]["Videos"].as<string>();
         *path::music = conf["Path"]["Music"].as<string>();
         
-        if(path::general->find("$HOME") != string::npos){
-            path::general->replace(path::general->find("$HOME"), 5, home_path);
-        }
-
-        if(path::documents->find("$HOME") != string::npos){
-            path::documents->replace(path::documents->find("$HOME"), 5, home_path);
-        }
-
-        if(path::pictures->find("$HOME") != string::npos){
-            path::pictures->replace(path::pictures->find("$HOME"), 5, home_path);
-        }
-
-        if(path::videos->find("$HOME") != string::npos){
-            path::videos->replace(path::videos->find("$HOME"), 5, home_path);
-        }
-
-        if(path::music->find("$HOME") != string::npos){
-            path::music->replace(path::music->find("$HOME"), 5, home_path);
-        }
+        // If no value is set then
+        if(path::general->empty())
+            xdg_user_dir(*path::general, "HOME");
+        else
+            xdg_user_dir(*path::general);
+        if(path::documents->empty())
+            xdg_user_dir(*path::documents, "DOCUMENTS");
+        else
+            xdg_user_dir(*path::documents);
+        if(path::pictures->empty())
+            xdg_user_dir(*path::pictures, "PICTURES");
+        else
+            xdg_user_dir(*path::pictures);
+        if(path::videos->empty())
+            xdg_user_dir(*path::videos, "VIDEOS");
+        else
+            xdg_user_dir(*path::videos);
+        if(path::music->empty())
+            xdg_user_dir(*path::music, "MUSIC");
+        else
+            xdg_user_dir(*path::music);
 
         *exclude::extensions = conf["Exclude"]["Extensions"].as<string>();
         *exclude::filenames = conf["Exclude"]["Filenames"].as<string>();

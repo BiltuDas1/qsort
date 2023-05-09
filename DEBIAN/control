@@ -2,6 +2,6 @@ Package: qsort
 Version: 0.3.2-beta
 Installed-Size: 693
 Maintainer: BiltuDas1
-Architecture: all
+Architecture: amd64
 Description: Quicker way to sort file according to user settings
   For More information visit https://github.com/BiltuDas1/qsort
