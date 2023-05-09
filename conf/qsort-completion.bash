@@ -1,7 +1,7 @@
 # https://opensource.com/article/18/3/creating-bash-completion-script
 _qsort_completions(){
     if [ ${#COMP_WORDS[@]} -eq "2" ]; then
-        COMPREPLY=($(compgen -W "--help --version --edit-conf --thread" -- "${COMP_WORDS[1]}"))
+        COMPREPLY=($(compgen -W "--help --version --edit-conf --thread --custom-conf -cc" -- "${COMP_WORDS[1]}"))
     else
         if [[ ${COMP_WORDS[1]} == "--edit-conf" && ${#COMP_WORDS[@]} -eq "3" ]]; then
             COMPREPLY=($(compgen -W "cli" -- "${COMP_WORDS[2]}"))
@@ -12,6 +12,10 @@ _qsort_completions(){
             done
             show_thread=${thread[@]}
             COMPREPLY=($(compgen -W "$show_thread" -- "${COMP_WORDS[2]}"))
+        fi
+        if [[ ${COMP_WORDS[1]} == "--custom-conf" || ${COMP_WORDS[1]} == "-cc" && ${#COMP_WORDS[@]} -eq "3" ]]; then
+            list=$(ls)
+            COMPREPLY=($(compgen -W "$list" -- "${COMP_WORDS[2]}"))
         fi
     fi
 }

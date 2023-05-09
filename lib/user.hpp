@@ -35,6 +35,9 @@ unsigned long long int tempint;
 // An integer variable which contains the program exit code
 int errorcode = 0;
 
+// Configuration file location
+string *confL = new string("/etc/qsort/qsort.conf");
+
 // [exclude] in qsort.conf
 namespace exclude
 {

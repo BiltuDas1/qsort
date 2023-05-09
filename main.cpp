@@ -37,7 +37,7 @@ class init
     static void getconfig()
     {
         ini::IniFile conf;
-        conf.load("/etc/qsort/qsort.conf");
+        conf.load(*confL);
 
         *path::general = conf["Path"]["General"].as<string>();
         *path::documents = conf["Path"]["Documents"].as<string>();
@@ -121,12 +121,14 @@ class base : protected init
     {
         cout << exec << " [--thread] [count]\n\n";
         cout << "Parameters of qsort are:\n";
-        cout << "--version              Prints the version information\n";
-        cout << "--help                 Shows this window\n";
-        cout << "--edit-conf [cli]      Opens qsort configuration file(requires sudo)\n";
-        cout << "   cli                 Force to cli mode\n";
-        cout << "--thread [count]       Threads count which will be used\n";
-        cout << "                       The count range only can between [1-" << thread_count << "]";
+        cout << "--version                  Prints the version information\n";
+        cout << "--help                     Shows this window\n";
+        cout << "--edit-conf [cli]          Opens qsort configuration file(requires sudo)\n";
+        cout << "   cli                     Force to cli mode\n";
+        cout << "--thread [count]           Threads count which will be used\n";
+        cout << "                           The count range only can between [1-" << thread_count << "]\n";
+        cout << "--custom-conf [filename]   Choose a Custom qsort.conf file\n";
+        cout << "   -cc                     Same as --custom-conf";
         cout << endl;
     }
 
@@ -316,6 +318,25 @@ public:
                     }
                 }
             }
+            // Custom qsort.conf
+            else if (!tempstr->compare("--custom-conf") || !tempstr->compare("-cc"))
+            {
+                if (arg == 2){
+                    error("No configuration file name specified");
+                } else {
+                    *tempstr = argv[2];
+                    if(fs::exists(*tempstr)){
+                        if(fs::is_regular_file(*tempstr) && !fs::is_empty(*tempstr)){
+                            *confL = *tempstr;
+                            work_thread();
+                        } else {
+                            error("Error: " + *tempstr + " is not a valid configuration file");
+                        }
+                    } else {
+                        error("Error: Configuration file not found");
+                    }
+                }
+            }
         }
         else
             work_thread();
@@ -323,7 +344,7 @@ public:
 
     ~base()
     {
-        delete tempstr, current_path;
+        delete tempstr, current_path, confL;
         delete exclude::extensions, exclude::filenames;
         delete path::documents, path::general, path::music, path::pictures, path::videos;
         delete json::documents, json::musics, json::pictures, json::videos;
