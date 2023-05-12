@@ -1,14 +1,14 @@
 {
     "Documents":[
-        "doc", "docx", "xls", "xlsx", "txt", "pdf","pptx","rtf","odt","ott","odm","docm","dotx","dotm","xls","xlsx","csv","tsv","xlsm","xltm","xltx","ods","ots","ppt","ppsx","odp","otp"
+        "doc", "docx", "xls", "xlsx", "txt", "pdf","pptx","rtf","odt","ott","odm","docm","dotx","dotm","csv","tsv","xlsm","xltm","xltx","ods","ots","ppt","ppsx","odp","otp"
     ],
 
     "Pictures":[
-        "jpg", "jpeg", "png", "ico","gif","bmp","tiff","svg","webp","ico","eps","raw","hdr"
+        "jpg", "jpeg", "png", "ico","gif","bmp","tiff","svg","webp","eps","hdr"
     ],
 
     "Musics":[
-        "mp3", "aac", "wav", "webm","wma","flac","ogg","m4a","aiff","alac","dsd","ape","opus","midi","kar","m3u","pls","cue","sib","mus","gpx","ra","ram","ac3","dts","wv","tta","vox","snd","raw","amr","au","dct","gsm","ivs","m4r","mpc","ofr","w64"
+        "mp3", "aac", "wav", "wma","flac","ogg","m4a","aiff","alac","dsd","ape","opus","midi","kar","m3u","pls","cue","sib","mus","gpx","ra","ram","ac3","dts","wv","tta","vox","snd","amr","au","dct","gsm","ivs","m4r","mpc","ofr","w64"
     ],
 
     "Videos":[
