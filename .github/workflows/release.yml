@@ -21,7 +21,7 @@ jobs:
         run: |
           bash .github/scripts/release/build.sh "${{ vars.VER }}"
 
-      - if: ${{ contains(ver.VER, 'beta') }}
+      - if: ${{ contains(vers.VER, 'beta') }}
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -30,7 +30,7 @@ jobs:
           files: |
             qsort_v${{ vars.VER }}_1_amd64.deb
 
-      - if: ${{ contains(ver.VER, 'stable') }}
+      - if: ${{ contains(vers.VER, 'stable') }}
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
