@@ -20,6 +20,19 @@ jobs:
         name: Building packages
         run: |
           bash .github/scripts/release/build.sh "${{ vars.VER }}"
+      
+      # Signing Files
+      - name: Updating CHANGELOG
+        run: |
+          bash .github/scripts/debian-package/commit.sh
+
+      # Pushing CHANGELOG
+      - name: Releasing CHANGELOG
+        uses: ad-m/github-push-action@master
+        with:
+          force: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 
       - if: ${{ contains(vars.VER, 'beta') }}
         uses: marvinpinto/action-automatic-releases@latest

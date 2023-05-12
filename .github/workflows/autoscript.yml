@@ -71,7 +71,7 @@ jobs:
       # Signing Files
       - name: Updating Files
         run: |
-          bash .github/scripts/debian-package/commit.sh "{{ secrets.API }}"
+          bash .github/scripts/debian-package/commit.sh
 
       # Pushing Files
       - name: Pushing Files
