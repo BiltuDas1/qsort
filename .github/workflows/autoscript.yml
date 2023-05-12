@@ -14,7 +14,6 @@ jobs:
 
       - shell: bash
       
-
       # Building from Source Code
         name: Building from Source Files
         run: |
@@ -25,16 +24,7 @@ jobs:
       # Generating Configuration Files
       - name: Generating Configuration Files
         run: |
-          cd ~
-          mkdir Documents Pictures Videos Music
-          echo XDG_DESKTOP_DIR="$HOME/Desktop">>$HOME/.config/user-dirs.dirs
-          echo XDG_DOCUMENTS_DIR="$HOME/Documents">>$HOME/.config/user-dirs.dirs
-          echo XDG_DOWNLOAD_DIR="$HOME/Downloads">>$HOME/.config/user-dirs.dirs
-          echo XDG_MUSIC_DIR="$HOME/Music">>$HOME/.config/user-dirs.dirs
-          echo XDG_PICTURES_DIR="$HOME/Pictures">>$HOME/.config/user-dirs.dirs
-          echo XDG_PUBLICSHARE_DIR="$HOME/Public">>$HOME/.config/user-dirs.dirs
-          echo XDG_TEMPLATES_DIR="$HOME/Templates">>$HOME/.config/user-dirs.dirs
-          echo XDG_VIDEOS_DIR="$HOME/Videos">>$HOME/.config/user-dirs.dirs
+          bash .github/scripts/vm-testing/gen-config.sh
 
       # Executing Binary
       - name: Executing Binary
@@ -45,33 +35,7 @@ jobs:
       # Checking If Everything Working Perfectly
       - name: Verifying Files
         run: |
-          if [[ -f "$HOME/Documents/document.doc" ]]; then
-              echo "Document Verification Complete"
-          else
-              echo "Document Verification Failed"
-              exit 1
-          fi
-
-          if [[ -f "$HOME/Pictures/blackhole.jpg" ]]; then
-              echo "Picture Verification Complete"
-          else
-              echo "Picture Verification Failed"
-              exit 1
-          fi
-
-          if [[ -f "$HOME/Videos/horse.mp4" ]]; then
-              echo "Video Verification Complete"
-          else
-              echo "Video Verification Failed"
-              exit 1
-          fi
-
-          if [[ ! -f "$HOME/add.py" ]]; then
-              echo "General Files Verification Complete"
-          else
-              echo "General Files Verification Failed"
-              exit 1
-          fi
+          bash .github/scripts/vm-testing/verify-files.sh
 
   debian-package:
     runs-on: ubuntu-latest
@@ -88,16 +52,7 @@ jobs:
         name: Updating the Source Code
         run: |
           # Updates the Source Code Version
-          ver=$(echo ${{ vars.VER }} | cut -f1 -d-)
-          vertype=$(echo ${{ vars.VER }} | cut -f2 -d-)
-          userver=$(grep -n "const string ver = \"" lib/user.hpp | head -1 | awk '{print $5}' | cut -f2 -d\")
-          uservertype=$(grep -n "const string vertype = \"" lib/user.hpp | head -1 | awk '{print $5}' | cut -f2 -d\")
-          if [[ "$ver" != "$userver" ]]; then
-              sed -i 's/const string ver = "'"$userver"'";/const string ver = "'"$ver"'";/' lib/user.hpp
-          fi
-          if [[ "$vertype" != "$uservertype" ]]; then
-              sed -i 's/const string vertype = "'"$uservertype"'";/const string vertype = "'"$vertype"'";/' lib/user.hpp
-          fi
+          bash .github/scripts/debian-package/update-code.sh "${{ vars.VER }}"
 
       # Generating Files
       - name: Compiling Files
@@ -111,27 +66,12 @@ jobs:
       # Modifying Debian Installer Information
       - name: Modifying Debian Installer Information
         run: |
-          # Updates the version into control
-          default=$(cat DEBIAN/control | grep "Version" | awk '{print $2}')
-          if [[ "$default" != "${{ vars.VER }}" ]]; then
-              sed -i 's/Version: '"$default"'/Version: '"${{ vars.VER }}"'/' DEBIAN/control
-          fi
-
-          # Updates total installed size
-          default=$(cat DEBIAN/control | grep "Installed-Size" | awk '{print $2}')
-          compiled=$(ls -l build/qsort | awk '{print $5}')
-          compiled=$((compiled/1024))
-          if [[ "$compiled" -ne "$default" ]]; then
-              sed -i 's/Installed-Size: '"$default"'/Installed-Size: '"$compiled"'/' DEBIAN/control
-          fi
+          bash .github/scripts/debian-package/update-installer.sh "${{ vars.VER }}"
           
       # Signing Files
       - name: Updating Files
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "Updated debian control information" && echo File Updated || echo Already up-to-date
+          bash .github/scripts/debian-package/commit.sh "{{ secrets.API }}"
 
       # Pushing Files
       - name: Pushing Files
