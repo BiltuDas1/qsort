@@ -18,7 +18,7 @@ using namespace std;
 // <--- Version Information Start --->
 // <--- Don't modify the text here --->
 
-const string ver = "0.3.2";
+const string ver = "0.3.3";
 const string vertype = "beta";
 
 // <--- Version Information End --->

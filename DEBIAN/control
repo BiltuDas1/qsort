@@ -1,5 +1,5 @@
 Package: qsort
-Version: 0.3.2-beta
+Version: 0.3.3-beta
 Installed-Size: 708
 Depends: libmagic-dev
 Maintainer: BiltuDas1
