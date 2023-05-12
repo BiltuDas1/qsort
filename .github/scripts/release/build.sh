@@ -5,7 +5,7 @@ VER=$1
 OLD_VER=$(cat Version)
 
 # Updates the CHANGELOG.md
-if ! grep -c "\[$VER\]" CHANGELOG.md >/dev/null; then
+if ! grep -c "\[$VER\]" CHANGELOG.md; then
     sed -i 's/\[unreleased\]: https:\/\/github.com\/BiltuDas1\/qsort\/compare\/0.3.2-beta...pre\/beta/\['$VER'\]: https:\/\/github.com\/BiltuDas1\/qsort\/compare\/'$OLD_VER'...'$VER'/' CHANGELOG.md
     sed -i 's/\[unreleased\]/\['$VER'\] - '$(date +%F)'/' CHANGELOG.md
     sed -i 's/'$OLD_VER'/'$VER'/' Version
