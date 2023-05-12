@@ -1,8 +1,0 @@
-/home/runner/work/qsort/qsort/build/CMakeFiles/qsort.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/deb.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/edit_cache.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/rebuild_cache.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/list_install_components.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/install.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/install/local.dir
-/home/runner/work/qsort/qsort/build/CMakeFiles/install/strip.dir
