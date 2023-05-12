@@ -21,11 +21,21 @@ jobs:
         run: |
           bash .github/scripts/release/build.sh "${{ vars.VER }}"
 
-      - uses: marvinpinto/action-automatic-releases@latest
+      - if: ${{ contains(ver.VER, 'beta') }}
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: "${{ vars.VER }}"
-          prerelease: ${{ vars.PRE_RELEASED }}
+          prerelease: true
+          files: |
+            qsort_v${{ vars.VER }}_1_amd64.deb
+
+      - if: ${{ contains(ver.VER, 'stable') }}
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "${{ vars.VER }}"
+          prerelease: false
           files: |
             qsort_v${{ vars.VER }}_1_amd64.deb
   
