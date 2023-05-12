@@ -1,6 +1,9 @@
 # Changelog
 
 ## [unreleased]
+- There's Nothing but Crickets ¯\\_(ツ)_/¯
+
+## [0.3.3-beta] - 2023-05-12
 ### Removed
 - Removed the obsolete Operations.md file
 
@@ -51,7 +54,8 @@
 - Initial release of qsort.  
 ---
 
-[unreleased]: https://github.com/BiltuDas1/qsort/compare/0.3.2-beta...pre/beta
+[unreleased]: https://github.com/BiltuDas1/qsort/compare/0.3.3-beta...pre/beta
+[0.3.3-beta]: https://github.com/BiltuDas1/qsort/compare/0.3.2-beta...0.3.3-beta
 [0.3.2-beta]: https://github.com/BiltuDas1/qsort/compare/0.3.1-beta...0.3.2-beta
 [0.3.1-beta]: https://github.com/BiltuDas1/qsort/compare/0.3-beta...0.3.1-beta
 [0.3-beta]: https://github.com/BiltuDas1/qsort/releases/tag/v0.3-beta

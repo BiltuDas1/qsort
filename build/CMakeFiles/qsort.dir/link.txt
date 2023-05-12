@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/qsort.dir/main.cpp.o -o qsort  -lmagic 
