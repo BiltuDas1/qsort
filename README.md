@@ -39,7 +39,14 @@ Once installed, simply navigate to the directory containing the files you want t
 
 
 ### Parameters
-Use `qsort --help` to see what parameters it supports.
+|Parameter|Description|  
+|---------|-----------|
+|--version|Prints the version information of the qsort program.|
+|--help|Shows the help window, which lists all the available parameters and their descriptions.|
+|--edit-conf [cli]|Opens the qsort configuration file. If the optional cli parameter is specified, then it will force the program to open the configuration file in command-line interface mode. This parameter requires sudo privileges.|
+|--thread [count]|Specifies the number of threads that the qsort program will use for sorting. The value of count can be any integer between 1 and 4. If this parameter is not specified, then the program will use a single thread for sorting.|
+|--custom-conf [filename] or -cc|Allows the user to choose a custom configuration file for the qsort program. The filename parameter specifies the name of the custom configuration file that the user wants to use. The -cc option is a shorthand for this parameter.|
+|--mime|(Beta) This parameter forces the qsort program to sort files according to their MIME type. By default, the program sorts files based on their file extensions. This parameter is still in beta, and its functionality may be limited or unstable.|
 
 ### Speed
 I can't gurentee that the speed will be same into your own Condition, but here is the speed for my personal laptop
