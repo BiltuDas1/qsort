@@ -111,6 +111,7 @@ class init
 class base : protected init
 {
     unsigned short thread_count = std::thread::hardware_concurrency();
+    bool ismime = false;
 
     void version()
     {
@@ -128,7 +129,9 @@ class base : protected init
         cout << "--thread [count]           Threads count which will be used\n";
         cout << "                           The count range only can between [1-" << thread_count << "]\n";
         cout << "--custom-conf [filename]   Choose a Custom qsort.conf file\n";
-        cout << "   -cc                     Same as --custom-conf";
+        cout << "   -cc                     Same as --custom-conf\n";
+        cout << "--mime                     (Beta) This parameter force qsort to sort\n";
+        cout << "                           files according to their mime type";
         cout << endl;
     }
 
@@ -138,10 +141,16 @@ class base : protected init
         errorcode = 1;
     }
 
-    static void operations(const long long int count, const long long int start_point){
+    static void operations(const long long int count, const long long int start_point, const bool ismime){
             // Listing all folder/files
             auto iter = fs::directory_iterator{*current_path};
             auto subrange = iter | ranges::views::drop(start_point);
+
+            magic_t magic_cookie = magic_open(MAGIC_MIME_TYPE);
+            
+            if (ismime){
+                magic_load(magic_cookie, NULL);
+            }
 
             for (auto const &files : subrange | ranges::views::take(count))
             {
@@ -167,19 +176,33 @@ class base : protected init
 
                         // Check if extension exist into Catagories
                         string mvpath;
-                        if (json::documents->find(extension) != string::npos)
-                            mvpath = *path::documents;
 
-                        else if (json::pictures->find(extension) != string::npos)
-                            mvpath = *path::pictures;
+                        if(ismime){
+                            string type = magic_file(magic_cookie, files.path().filename().c_str());
+                            type.erase(type.find("/"));
+                            if (type == "image")
+                                mvpath = *path::pictures;
+                            else if (type == "video")
+                                mvpath = *path::videos;
+                            else if (type == "audio")
+                                mvpath = *path::music;
+                            else
+                                mvpath = *path::general;
+                        } else {
+                            if (json::documents->find(extension) != string::npos)
+                                mvpath = *path::documents;
 
-                        else if (json::musics->find(extension) != string::npos)
-                            mvpath = *path::music;
+                            else if (json::pictures->find(extension) != string::npos)
+                                mvpath = *path::pictures;
 
-                        else if (json::videos->find(extension) != string::npos)
-                            mvpath = *path::videos;
-                        else
-                            mvpath = *path::general;
+                            else if (json::musics->find(extension) != string::npos)
+                                mvpath = *path::music;
+
+                            else if (json::videos->find(extension) != string::npos)
+                                mvpath = *path::videos;
+                            else
+                                mvpath = *path::general;
+                        }
 
                         try {
                             fs::rename(pathfile, mvpath + "/" + filename);
@@ -200,9 +223,13 @@ class base : protected init
                     }
                 }
             }
+
+            if(ismime){
+                magic_close(magic_cookie);
+            }
     }
 
-    void work_thread(){
+    void work_thread(const bool ismime){
             // If no arguments passed then do main operation
             // Initializing Variables/Settings
             thread g_config(init::getconfig);
@@ -223,7 +250,7 @@ class base : protected init
                 cout << "Using " << thread_count << " Threads\n";
                 // Creating threads
                 for(unsigned short i = 0; i < thread_count; ++i){
-                    threads[i] = thread(&base::operations, thread_process, tempint);
+                    threads[i] = thread(&base::operations, thread_process, tempint, ismime);
                     tempint = tempint + thread_process;
                     if(tempint > file_count){
                         tempint = file_count;
@@ -242,7 +269,7 @@ class base : protected init
             tempint = 0;
             const unsigned int remaining_count = distance(fs::directory_iterator(*current_path), fs::directory_iterator{});
             if (remaining_count){
-                operations(remaining_count, tempint);
+                operations(remaining_count, tempint, ismime);
             }
 
             // If operation completed
@@ -302,49 +329,72 @@ public:
                 }
                 errorcode  = 1;
             }
-            // Thread parameter
-            else if (!tempstr->compare("--thread"))
-            {
-                if (arg == 2)
+            // For Multiple types arguments
+            else {
+                // Appending the whole parameters list
+                for(int i=1; i<arg; ++i)
                 {
-                    work_thread();
-                } else {
-                    *tempstr = argv[2];
-                    if (stoi(*tempstr) <= thread_count && stoi(*tempstr) >= 1){
-                        this->thread_count = stoi(*tempstr);
-                        work_thread();
-                    } else {
-                        cout << "Error: Out of range. You can only use any thread between [1-" << thread_count << "]." << "\n";
-                    }
+                    if(i!=1)
+                        args->append("\\");
+                    args->append(argv[i]);
                 }
-            }
-            // Custom qsort.conf
-            else if (!tempstr->compare("--custom-conf") || !tempstr->compare("-cc"))
-            {
-                if (arg == 2){
-                    error("No configuration file name specified");
-                } else {
-                    *tempstr = argv[2];
-                    if(fs::exists(*tempstr)){
-                        if(fs::is_regular_file(*tempstr) && !fs::is_empty(*tempstr)){
-                            *confL = *tempstr;
-                            work_thread();
+                args->append("\\");
+
+                // Thread Parameter
+                if (args->find("--thread") != string::npos){
+                    if (arg == 2)
+                    {
+                        work_thread(false);
+                    } else {
+                        *tempstr = args->substr(args->find("--thread") + 8 + 1);
+                        tempstr->erase(tempstr->find_first_of("\\"));
+                        if (stoi(*tempstr) <= thread_count && stoi(*tempstr) >= 1){
+                            this->thread_count = stoi(*tempstr);
                         } else {
-                            error("Error: " + *tempstr + " is not a valid configuration file");
+                            error("Error: Out of range. You can only use any thread between [1-" + to_string(thread_count) + "].");
                         }
-                    } else {
-                        error("Error: Configuration file not found");
                     }
                 }
+
+                // Custom qsort.conf
+                if (args->find("--custom-conf") != string::npos || args->find("-cc") != string::npos){
+                    if (arg == 2){
+                        error("No configuration file name specified");
+                    } else {
+                        if(args->find("-cc") != string::npos)
+                            *tempstr = args->substr(args->find("-cc") + 3 + 1);
+                        else
+                            *tempstr = args->substr(args->find("--custom-conf") + 13 + 1);
+                        tempstr->erase(tempstr->find_first_of("\\"));
+                        if(fs::exists(*tempstr)){
+                            if(fs::is_regular_file(*tempstr) && !fs::is_empty(*tempstr))
+                                *confL = *tempstr;
+                            else
+                                error("Error: " + *tempstr + " is not a valid configuration file");
+                        } else {
+                            error("Error: Configuration file not found");
+                        }
+                    }
+                }
+
+                // Mime type sorter
+                if (args->find("--mime") != string::npos){
+                    this->ismime = true;
+                }
+
+                // Load the task
+                work_thread(this->ismime);
             }
         }
         else
-            work_thread();
+        {
+            work_thread(false);
+        }
     }
 
     ~base()
     {
-        delete tempstr, current_path, confL;
+        delete tempstr, current_path, confL, args;
         delete exclude::extensions, exclude::filenames;
         delete path::documents, path::general, path::music, path::pictures, path::videos;
         delete json::documents, json::musics, json::pictures, json::videos;

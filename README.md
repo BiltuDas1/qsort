@@ -1,15 +1,20 @@
+![Downloads](https://img.shields.io/github/downloads/BIltuDas1/qsort/total?style=social)
 # Quick File Sorter
 Quick File Sorter is a command-line tool for automatically sorting files based on their file extension. It can sort various types of files, such as documents, images, music, and videos, into their respective folders. This tool can save you a lot of time and effort in manually sorting your files.
 
 ## Features
-* Automatically sorts files based on their file extensions
-* Supports various types of files, such as documents, images, music, and videos
-* Easy to configure using qsort.conf file
-* Available as a command-line tool
-Supports for Linux
+* This tool automatically sorts files based on their file extensions and mime types, although it currently does not support document type files.
+* It supports various types of files including images, music, and videos, as well as documents.
+* Configuration is easy through the use of the qsort.conf file.
+* This tool is available as a command-line tool.
 
 ## How it works
 Quick File Sorter reads all extension data from extensions.json and loads them into different groups using C++ strings. It then reads the qsort.conf file and moves files to a specific path based on the matched extensions using the C++ std::filesystem::rename function.
+
+## Requirements
+
+* CMake 3.22 or higher
+* libmagic-dev
 
 ## Building & Installing
 You can build the source code yourself by cloning the repository and running the following commands:
@@ -21,7 +26,6 @@ cmake -B build .
 cd build/
 sudo make install
 ```
-Note: It requires CMake 3.22 or higher  
 Alternatively, you can download pre-built binaries from the releases page.
 
 ### Source Code Building

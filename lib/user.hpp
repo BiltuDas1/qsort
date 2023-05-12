@@ -9,6 +9,7 @@
 #include <ranges>
 #include <span>
 #include <fstream>
+#include <magic.h> // libmagic-dev
 #include "inicpp.h" // https://github.com/Rookfighter/inifile-cpp
 #include "json.hpp" // https://github.com/nlohmann/json
 namespace fs = std::filesystem;
@@ -23,11 +24,15 @@ const string vertype = "beta";
 // <--- Version Information End --->
 
 // <-------- Main user.hpp starts here -------->
+
 // A dynamic String for storing temporary data
 string *tempstr = new string;
 
 // A dynamic String which contains the current path location
 string *current_path = new string(fs::current_path());
+
+// A dynamic String for storing total arguments passed through this binary
+string *args = new string;
 
 // An integer for storing temporary long integers
 unsigned long long int tempint;
@@ -65,6 +70,7 @@ namespace json
 }
 
 // Function to execute Commands into Host System
+// And redirect output to a string or std::ostream
 string execute_cmd(const string& cmd)
 {
     string result;

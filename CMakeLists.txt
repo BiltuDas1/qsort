@@ -4,6 +4,7 @@ if(UNIX)
     project(qsort CXX)
     set(CMAKE_CXX_STANDARD 20)
     add_executable(qsort main.cpp)
+    target_link_libraries(qsort magic)
     install(
         PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/qsort
         DESTINATION /usr/local/bin
