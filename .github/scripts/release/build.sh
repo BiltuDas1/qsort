@@ -27,7 +27,7 @@ if ! grep -c "\[$VER\]" CHANGELOG.md >/dev/null; then
 fi
 
 echo qsort_v"$VER"_1_amd64.deb >.gitignore
-echo build >.gitignore
+echo build >>.gitignore
 echo .gitignore >>.gitignore
 
 cmake -B build .
