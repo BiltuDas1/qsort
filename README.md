@@ -48,6 +48,77 @@ Once installed, simply navigate to the directory containing the files you want t
 |--custom-conf [filename] or -cc|Allows the user to choose a custom configuration file for the qsort program. The filename parameter specifies the name of the custom configuration file that the user wants to use. The -cc option is a shorthand for this parameter.|
 |--mime|(Beta) This parameter forces the qsort program to sort files according to their MIME type. By default, the program sorts files based on their file extensions. This parameter is still in beta, and its functionality may be limited or unstable.|
 
+# Configuration
+Quick File Sorter uses a configuration file to determine where to move the files. The default configuration file is located at /etc/qsort/qsort.conf. To modify the configuration, you can edit this file using your favorite text editor.
+
+The qsort.conf file allows you to specify the paths where files should be moved to, and to exclude certain files or file extensions from being moved.
+
+
+## Path Configuration
+The Path section specifies the destination path for each file type. You can use predefined variables or provide custom paths.
+
+To specify the path where a particular file type should be moved to, use the following format in the `[Path]` section of the qsort.conf file:
+
+```
+[type]=$PATH
+```
+For example, to specify that all image files should be moved to the Pictures directory, use:
+```
+Pictures=$PICTURES
+```
+Note that the `$PICTURES` variable is obtained from the xdg-user-dirs system, which is set to `/home/user/Pictures`. While you can use the direct path `/home/user/Pictures` in your configuration file.
+
+You can also refer to the [xdg-user-dirs](https://wiki.archlinux.org/title/XDG_user_directories) documentation to learn more about using predefined variables for directory paths.
+
+Currently The following types are supported:
+
+* General
+* Videos
+* Pictures
+* Documents
+* Music
+
+
+## Exclusion Configuration
+The Exclude section allows you to exclude certain files or file types from being moved. You can exclude files by their extensions or specific filenames.
+
+To exclude certain files or file extensions from being moved, use the following format in the [Exclude] section of the qsort.conf file:
+
+```
+[Exclude]
+Extensions=ext1,ext2
+Filenames=file1,file2
+```
+
+For example, to exclude all files with the .txt and .py extensions, as well as a file named requirements.txt, use:
+
+```
+[Exclude]
+Extensions=py,txt
+Filenames=requirements.txt
+```
+In the example above, the extensions py and txt are excluded, meaning files with these extensions will not be moved. Additionally, the file named requirements.txt will be excluded.
+
+Please note that the configuration file can be customized to suit your specific needs. Make sure to follow the format specified in the examples above and adjust the paths and exclusions accordingly.
+
+
+Here is a Final Example of qsort.conf file:
+
+```
+[Path]
+General=$HOME
+Videos=$VIDEOS
+Pictures=$PICTURES
+Documents=$DOCUMENTS
+Music=$MUSIC
+
+[Exclude]
+Extensions=py,txt
+Filenames=requirements.txt
+```
+
+Note: Incorrect Configuration might crash the program without any warning.
+
 ### Speed
 I can't gurentee that the speed will be same into your own Condition, but here is the speed for my personal laptop
 
@@ -63,4 +134,4 @@ Hard Disk: HS-SSD-E100 256G
 This project is licensed under [MIT License](/LICENSE)
 
 ## Contributing
-Contributions to Quick File Sorter are welcome and encouraged! To contribute, please create a pull request with your proposed changes.
+If you would like to add a new feature to Quick File Sorter, please create an issue first to discuss the feature with the project owner and gain approval before proceeding with any changes. If you encounter an issue or bug that you would like to fix, you are welcome to create a pull request with your proposed changes directly. Contributions of any kind are greatly appreciated!
