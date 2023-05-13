@@ -3,13 +3,13 @@
 Quick File Sorter is a command-line tool for automatically sorting files based on their file extension. It can sort various types of files, such as documents, images, music, and videos, into their respective folders. This tool can save you a lot of time and effort in manually sorting your files.
 
 ## Features
-* This tool automatically sorts files based on their file extensions and mime types, although it currently does not support document type files.
+* This tool automatically sorts files based on their file extensions and mime types.
 * It supports various types of files including images, music, and videos, as well as documents.
 * Configuration is easy through the use of the qsort.conf file.
 * This tool is available as a command-line tool.
 
 ## How it works
-Quick File Sorter reads all extension data from extensions.json and loads them into different groups using C++ strings. It then reads the qsort.conf file and moves files to a specific path based on the matched extensions using the C++ std::filesystem::rename function.
+Quick File Sorter reads all extension data from extensions.json(only for sorting based on extensions) and loads them into different groups using C++ strings. It then reads the qsort.conf file and moves files to a specific path based on the matched extensions using the C++ std::filesystem::rename function.
 
 ## Requirements
 
